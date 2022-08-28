@@ -37,12 +37,14 @@ const thoughtSchema = new Schema(
   }
 );
 
-reactionCount
-  .virtual("reactionCount")
-  // Getter
-  .get(function () {
-    return this.tags.length;
-  });
+// virtual breaks it, not referenced anywhere
+
+// reactionCount
+//   .virtual("reactionCount")
+//   // Getter
+//   .get(function () {
+//     return this.tags.length;
+//   });
 
 const Thought = model("thought", thoughtSchema);
 
