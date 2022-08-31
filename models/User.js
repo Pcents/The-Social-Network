@@ -24,10 +24,21 @@ const userSchema = new Schema(
     },
     // i think these break it
 
-    // thoughts: [thoughtSchema],
+    thoughts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Thought",
+      },
+    ],
     // - `friends`
     //   - Array of `_id` values referencing the `User` model (self-reference)
-    // friends: [userSchema],
+    // ref will be
+    friends: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   {
     // what is this again?
