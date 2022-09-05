@@ -18,7 +18,7 @@ router
   .put(updateSingleUser);
 
 router
-  .route("/:userId/friends/friendId")
+  .route("/:userId/friends/:friendId")
   .post(createFriend)
   .delete(removeFriend);
 

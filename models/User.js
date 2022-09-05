@@ -22,26 +22,20 @@ const userSchema = new Schema(
         "Real Email Please",
       ],
     },
-    // i think these break it
-
     thoughts: [
       {
         type: Schema.Types.ObjectId,
-        ref: "Thought",
+        ref: "thought",
       },
     ],
-    // - `friends`
-    //   - Array of `_id` values referencing the `User` model (self-reference)
-    // ref will be
     friends: [
       {
         type: Schema.Types.ObjectId,
-        ref: "User",
+        ref: "user",
       },
     ],
   },
   {
-    // what is this again?
     toJSON: {
       virtuals: true,
     },
@@ -49,23 +43,10 @@ const userSchema = new Schema(
   }
 );
 
-//the below virtual breaks it
-
-// userSchema.virtual("getUserFriends").get(function () {
-//   return `friend:${this.user}`;
-// });
-// // where is this supposed to go?
-// friendCount
-//   .virtual("friendCount")
-//   // Getter
-//   .get(function () {
-//     return this.tags.length;
-//   });
+userSchema.virtual("friendCount").get(function () {
+  return this.friends.length;
+});
 
 const User = model("user", userSchema);
 
 module.exports = User;
-
-// **Schema Settings**:
-
-// Create a virtual called `friendCount` that retrieves the length of the user's `friends` array field on query.

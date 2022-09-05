@@ -10,9 +10,10 @@ const thoughtSchema = new Schema(
       minlength: 1,
     },
     // possible getter method for timmstamp
+
     createdAt: {
       type: Date,
-      get: (date) => timeSince(date),
+      default: Date.now,
     },
     // the user that created the thought
     username: {
@@ -20,14 +21,7 @@ const thoughtSchema = new Schema(
       required: true,
     },
     // array of nested docs created with reactionSchema
-    reactions: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "Reaction",
-      },
-    ],
-    // or is it
-    // [reactionSchema]
+    reactions: [reactionSchema],
   },
   {
     toJSON: {
@@ -38,13 +32,9 @@ const thoughtSchema = new Schema(
 );
 
 // virtual breaks it, not referenced anywhere
-
-// reactionCount
-//   .virtual("reactionCount")
-//   // Getter
-//   .get(function () {
-//     return this.tags.length;
-//   });
+thoughtSchema.virtual("reactionCount").get(function () {
+  return this.reactions.length;
+});
 
 const Thought = model("thought", thoughtSchema);
 

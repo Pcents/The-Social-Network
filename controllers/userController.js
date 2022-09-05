@@ -1,25 +1,30 @@
 const { User, Thought } = require("../models");
 
-// friends and update user not working
+// friends not working
 
 module.exports = {
   // retrieves all users
   getUsers(req, res) {
     User.find()
+      .populate("thoughts")
+      .populate("friends")
       .then((users) => res.json(users))
-      .catch((err) => res.status(500).json(err));
+      .catch((err) => {
+        console.log(err);
+        res.status(500).json(err);
+      });
   },
   //   retrieves a single user
   getSingleUser(req, res) {
     User.findOne({ _id: req.params.userId })
       .select("-__v")
+      .populate("thoughts")
+      .populate("friends")
       .then(async (user) =>
         !user
           ? res.status(404).json({ message: "no user found" })
           : res.json({
               user,
-              // do we need to pull in thoughts?
-              // thought:await thought(req.params.UserId),
             })
       )
       .catch((err) => {
@@ -32,8 +37,6 @@ module.exports = {
       .then((user) => res.json(user))
       .catch((err) => res.status(500).json(err));
   },
-
-  //   not updating the body...
   updateSingleUser(req, res) {
     User.findOneAndUpdate(
       { _id: req.params.userId },
@@ -77,14 +80,12 @@ module.exports = {
         res.status(500).json(err);
       });
   },
-  //   needs friend schema or something in models?
   // adds a friend to a user
   createFriend(req, res) {
-    console.log("YOU HAVE A FRIEND");
-    console.log(req.body);
     User.findOneAndUpdate(
       { _id: req.params.userId },
-      { $addToSet: { friend: req.body } }
+      { $addToSet: { friends: req.params.friendId } },
+      { new: true }
       // no validators needed
     )
       .then((user) =>
